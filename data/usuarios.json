@@ -1,0 +1,18 @@
+
+[
+    {
+        "usuario": "standard_user",
+        "clave": "secret_sauce",
+        "resultado": "exito"
+    },
+    {
+        "usuario": "locked_out_user",
+        "clave": "secret_sauce",
+        "resultado": "error"
+    },
+    {
+        "usuario": "usuario_incorrecto",
+        "clave": "clave_incorrecta",
+        "resultado": "error"
+    }
+]
