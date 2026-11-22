@@ -1,77 +1,79 @@
 
 import requests
 
-
-def test_obtener_usuarios():
-
-    url = "https://reqres.in/api/users?page=2"
-
-    respuesta = requests.get(url)
-
-    # Validar código HTTP
-    assert respuesta.status_code == 200
-
-    # Convertir respuesta a JSON
-    datos = respuesta.json()
-
-    assert "data" in datos
-    assert isinstance(datos["data"], list)
-    assert len(datos["data"]) > 0
-
-    # Validar contenido
-    assert datos["page"] == 2
-    assert len(datos["data"]) > 0
-
-    print(datos)
+BASE_URL = "https://jsonplaceholder.typicode.com"
 
 
+def test_obtener_todos_los_posts():
+    response = requests.get(f"{BASE_URL}/posts")
+
+    assert response.status_code == 200
+
+    datos = response.json()
+
+    assert isinstance(datos, list)
+    assert len(datos) > 0
 
 
-def test_crear_usuario():
+def test_obtener_post_por_id():
+    response = requests.get(f"{BASE_URL}/posts/1")
 
-    url = "https://reqres.in/api/users"
+    assert response.status_code == 200
 
-    usuario = {
-        "name": "Matias QA",
-        "job": "tester"
+    datos = response.json()
+
+    assert datos["id"] == 1
+    assert "title" in datos
+    assert "body" in datos
+    assert "userId" in datos
+
+
+def test_crear_post():
+    payload = {
+        "title": "Proyecto QA Automation",
+        "body": "Prueba automatizada con Python y Requests",
+        "userId": 1
     }
 
-    respuesta = requests.post(url, json=usuario)
+    response = requests.post(
+        f"{BASE_URL}/posts",
+        json=payload
+    )
 
-    # Validar código HTTP
-    assert respuesta.status_code == 201
+    assert response.status_code == 201
 
-    # Obtener respuesta JSON
-    datos = respuesta.json()
+    datos = response.json()
 
-    # Validar los datos
-    assert datos["name"] == "Matias QA"
-    assert datos["job"] == "tester"
+    assert datos["title"] == payload["title"]
+    assert datos["body"] == payload["body"]
+    assert datos["userId"] == payload["userId"]
     assert "id" in datos
-    assert "createdAt" in datos
-    assert isinstance(datos["id"], str)
 
 
+def test_actualizar_post():
+    payload = {
+        "id": 1,
+        "title": "Post actualizado",
+        "body": "Contenido actualizado",
+        "userId": 1
+    }
+
+    response = requests.put(
+        f"{BASE_URL}/posts/1",
+        json=payload
+    )
+
+    assert response.status_code == 200
+
+    datos = response.json()
+
+    assert datos["id"] == 1
+    assert datos["title"] == payload["title"]
+    assert datos["body"] == payload["body"]
 
 
-def test_eliminar_usuario():
+def test_eliminar_post():
+    response = requests.delete(f"{BASE_URL}/posts/1")
 
-    url = "https://reqres.in/api/users/2"
-
-    respuesta = requests.delete(url)
-
-    # Validar código HTTP
-    assert respuesta.status_code == 204
-
-    # Validar que la respuesta no tenga contenido
-    assert respuesta.text == ""
-
-
-
-
-def test_usuario_no_existente():
-    url = "https://reqres.in/api/users/999"
-
-    respuesta = requests.get(url)
-
-    assert respuesta.status_code == 404
+    assert response.status_code == 200
+    assert response.json() == {}

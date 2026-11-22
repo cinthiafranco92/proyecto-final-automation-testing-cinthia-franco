@@ -63,7 +63,7 @@ class ProductsPage:
 
     def obtener_producto_del_carrito(self):
         return self.wait.until(
-        EC.visibility_of_element_located(
-            (By.CLASS_NAME, "inventory_item_name")
-        )
-    ).text
+        lambda driver: driver.find_element(
+            By.CLASS_NAME, "inventory_item_name"
+        ).text
+    )

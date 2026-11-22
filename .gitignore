@@ -6,3 +6,10 @@ venv/
 .env
 .vscode/
 .idea/
+
+
+# Registros generados por las pruebas
+logs/*.log
+
+# Capturas automáticas de Selenium
+reports/screens/
